@@ -1,3 +1,5 @@
+import Link from "next/link";
+
 export default function FilesPage() {
   const files = [
     "soccerway-2024-11-13-cd69b6a8-ddea-4080-91c6-7be78a8b2c17.xls",
@@ -15,7 +17,9 @@ export default function FilesPage() {
   return (
     <div className="flex flex-col">
       {files.map((file) => (
-        <a href={"https://storage.yandexcloud.net/esmeralda/" + file}>{file}</a>
+        <Link href={"https://storage.yandexcloud.net/esmeralda/" + file}>
+          {file}
+        </Link>
       ))}
     </div>
   );
