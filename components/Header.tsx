@@ -4,7 +4,7 @@ export default function Header() {
   return (
     <header className="bg-white shadow-md py-4 px-6 flex items-center justify-between">
       <h1 className="font-bold text-xl">
-        <a href="/">aaf-bet.ru</a>
+        <Link href="/">aaf-bet.ru</Link>
       </h1>
       <nav>
         <ul className="flex gap-4">
