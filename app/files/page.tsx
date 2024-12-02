@@ -16,8 +16,11 @@ export default function FilesPage() {
 
   return (
     <div className="flex flex-col">
-      {files.map((file) => (
-        <Link href={"https://storage.yandexcloud.net/esmeralda/" + file}>
+      {files.map((file, index) => (
+        <Link
+          key={index}
+          href={"https://storage.yandexcloud.net/esmeralda/" + file}
+        >
           {file}
         </Link>
       ))}
