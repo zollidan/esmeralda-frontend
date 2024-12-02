@@ -3,7 +3,7 @@ import "./globals.css";
 import Header from "../components/Header";
 
 export const metadata: Metadata = {
-  title: "AAF Bet",
+  title: "aaf-bet.ru",
   description: "",
 };
 
@@ -15,7 +15,6 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body>
-        {" "}
         <Header></Header>
         <main>{children}</main>
       </body>
