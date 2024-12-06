@@ -1,29 +1,64 @@
+"use client";
 import Link from "next/link";
+import { useEffect, useState } from "react";
+
+interface File {
+  Key: string;
+  LastModified: string;
+  ETag: string;
+  Size: number;
+  Owner: {
+    DisplayName: string;
+    ID: string;
+  };
+}
 
 export default function FilesPage() {
-  const files = [
-    "soccerway-2024-11-13-cd69b6a8-ddea-4080-91c6-7be78a8b2c17.xls",
-    "soccerway-2024-11-14-23882947-d325-4567-adc7-35dac5b8b3fd.xls",
-    "soccerway-2024-11-18-a944d540-f0fd-4ea7-a6ff-731d0f57f4eb.xls",
-    "soccerway-2024-11-20-d3d8a611-1ba2-4889-a5c3-8fef8cbff469.xls",
-    "soccerway-2024-11-23-cfb372a8-d7bc-4fea-ae1e-7f2d74eb8ab2.xls",
-    "soccerway-2024-11-25-b5358800-bc39-4a4e-8020-10cfda73aea3.xls",
-    "soccerway-2024-11-26-97d6e239-526b-46a7-bd4f-709e8e26928d.xls",
-    "soccerway-2024-01-01-cef9c00a-b17a-410a-a97a-375fe12b2f01.xls",
-    "soccerway-2024-01-02-a9054c27-7f03-4b17-83b3-748e78d391bf.xls",
-    "soccerway-2024-01-03-c6aa963c-a744-451e-9173-0071eefdcbc5.xls",
-  ];
+  const [data, setData] = useState<File[]>([]);
+
+  function fetchFiles() {
+    const response = fetch("https://api.aaf-bet.ru/api/files");
+
+    console.log(response);
+
+    return response;
+  }
+
+  useEffect(() => {
+    fetchFiles()
+      .then((res) => res.json())
+      .then((data) => {
+        setData(data);
+      });
+  }, []);
 
   return (
-    <div className="flex flex-col">
-      {files.map((file, index) => (
-        <Link
-          key={index}
-          href={"https://storage.yandexcloud.net/esmeralda/" + file}
-        >
-          {file}
-        </Link>
-      ))}
+    <div className="flex justify-center overflow-x-auto">
+      <table className="w-2/3 mt-10 text-sm text-left rtl:text-right text-gray-500 ">
+        <tbody>
+          {data &&
+            data.map((file) => (
+              <tr className="bg-white border-b " key={file.ETag}>
+                <th
+                  scope="row"
+                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
+                >
+                  {file.Key}
+                </th>
+                <td className="px-6 py-4">
+                  <Link
+                    href={
+                      "https://storage.yandexcloud.net/esmeralda/" + file.Key
+                    }
+                    className="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+                  >
+                    Download
+                  </Link>
+                </td>
+              </tr>
+            ))}
+        </tbody>
+      </table>
     </div>
   );
 }
