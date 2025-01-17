@@ -10,20 +10,28 @@ export default function Header() {
         <ul className="flex gap-4">
           <li>
             <Link
-              href="/files"
+              href="/tasks"
               className="text-blue-600 hover:bg-lavender-blush-100 rounded-lg p-2 transition-all duration-300"
             >
-              Files
+              Задачи
             </Link>
           </li>
           <li>
             <Link
+              href="/files"
+              className="text-blue-600 hover:bg-lavender-blush-100 rounded-lg p-2 transition-all duration-300"
+            >
+              Файлы
+            </Link>
+          </li>
+          {/* <li>
+            <Link
               href="/parsers"
               className="text-blue-600 hover:bg-lavender-blush-100 rounded-lg p-2 transition-all duration-300"
             >
-              Parsers
+              Парсеры
             </Link>
-          </li>
+          </li> */}
         </ul>
       </nav>
     </header>

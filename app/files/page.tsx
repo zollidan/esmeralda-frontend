@@ -1,12 +1,13 @@
 "use client";
-import Link from "next/link";
-import { useEffect, useState } from "react";
+import React, { useState, useEffect } from "react";
 
+// Описание структуры данных файла
 interface File {
   Key: string;
   LastModified: string;
   ETag: string;
   Size: number;
+  StorageClass: string;
   Owner: {
     DisplayName: string;
     ID: string;
@@ -14,51 +15,70 @@ interface File {
 }
 
 export default function FilesPage() {
-  const [data, setData] = useState<File[]>([]);
+  const [data, setData] = useState<File[]>([]); // Явно указываем тип массива
+  const [error, setError] = useState<string | null>(null);
 
-  function fetchFiles() {
-    const response = fetch("https://api.aaf-bet.ru/api/files");
-
-    console.log(response);
-
-    return response;
+  async function fetchFiles() {
+    try {
+      const response = await fetch("https://api.aaf-bet.ru/api/s3/files");
+      if (!response.ok) {
+        throw new Error(`Error: ${response.status}`);
+      }
+      const files: File[] = await response.json(); // Указываем, что это массив объектов типа File
+      setData(files);
+    } catch (err) {
+      setError((err as Error).message); // Приведение ошибки к типу Error
+    }
   }
 
   useEffect(() => {
-    fetchFiles()
-      .then((res) => res.json())
-      .then((data) => {
-        setData(data);
-      });
+    fetchFiles();
   }, []);
+
+  function handleDownload(key: string) {
+    const url = `https://api.aaf-bet.ru/api/s3/files/${key}`;
+    window.open(url, "_blank");
+  }
 
   return (
     <div className="flex justify-center overflow-x-auto">
-      <table className="w-2/3 mt-10 text-sm text-left rtl:text-right text-gray-500 ">
-        <tbody>
-          {data &&
-            data.map((file) => (
-              <tr className="bg-white border-b " key={file.ETag}>
-                <th
-                  scope="row"
-                  className="px-6 py-4 font-medium text-gray-900 whitespace-nowrap "
-                >
-                  {file.Key}
-                </th>
-                <td className="px-6 py-4">
-                  <Link
-                    href={
-                      "https://storage.yandexcloud.net/esmeralda/" + file.Key
-                    }
-                    className="text-white bg-green-700 hover:bg-green-800 focus:outline-none focus:ring-4 focus:ring-green-300 font-medium rounded-full text-sm px-5 py-2.5 text-center me-2 mb-2 dark:bg-green-600 dark:hover:bg-green-700 dark:focus:ring-green-800"
+      {error ? (
+        <p className="text-red-500">Failed to fetch files: {error}</p>
+      ) : (
+        <table className="table-auto border-collapse border border-gray-400">
+          <thead>
+            <tr>
+              <th className="border border-gray-300 px-4 py-2">Key</th>
+              <th className="border border-gray-300 px-4 py-2">
+                Last Modified
+              </th>
+              <th className="border border-gray-300 px-4 py-2">Size (KB)</th>
+              <th className="border border-gray-300 px-4 py-2">Download</th>
+            </tr>
+          </thead>
+          <tbody>
+            {data.map((file, index) => (
+              <tr key={index}>
+                <td className="border border-gray-300 px-4 py-2">{file.Key}</td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {new Date(file.LastModified).toLocaleString()}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  {(file.Size / 1024).toFixed(2)}
+                </td>
+                <td className="border border-gray-300 px-4 py-2">
+                  <button
+                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
+                    onClick={() => handleDownload(file.Key)}
                   >
                     Download
-                  </Link>
+                  </button>
                 </td>
               </tr>
             ))}
-        </tbody>
-      </table>
+          </tbody>
+        </table>
+      )}
     </div>
   );
 }
