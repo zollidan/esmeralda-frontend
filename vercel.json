@@ -1,8 +1,6 @@
 {
   "builds": [
     {
-      "src": "./package.json",
-      "use": "@now/build",
       "config": {
         "installCommand": "npm install --force"
       }
