@@ -1,12 +1,12 @@
 import { Nav } from "./nav"
-import { Login } from "./login"
+import {UserButton} from "@clerk/nextjs";
 
 export const Header = () => {
     return (
         <header className="sticky pl-14 py-4">
             <div className="flex justify-between items-center gap-x-4 px-6">
                 <Nav />
-                <Login />
+                <UserButton />
             </div>
         </header>
     )

@@ -8,7 +8,14 @@ export async function POST(
 
 	try {
 		if (parser === 'marafon') {
-			await fetch('https://api.aaf-bet.ru/api/parser/marafon')
+			const api_respones = await fetch('https://api.aaf-bet.ru/api/parser/marafon', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+        })
+
+			console.log(api_respones.status)
 
 			return NextResponse.json('Парсер запущен!', { status: 200 })
 		}

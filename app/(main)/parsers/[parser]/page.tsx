@@ -1,6 +1,7 @@
 'use client'
 
 import { use } from "react"
+import toast from "react-hot-toast";
 
 const ParserPage = ({ params }: { params: Promise<{ parser: string }> }) => {
     const { parser } = use(params)
@@ -13,6 +14,8 @@ const ParserPage = ({ params }: { params: Promise<{ parser: string }> }) => {
             },
             body: JSON.stringify({ parser }),
         })
+
+        toast.success(`Parser ${parser} started!`, {})
 
         const data = await response.json()
         console.log(data)
