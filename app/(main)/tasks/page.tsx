@@ -4,7 +4,7 @@ import { TbFaceIdError } from "react-icons/tb";
 
 export default function ParsersPage() {
   const [data, setData] = useState([]);
-  const [error, setError] = useState();
+  // const [error, setError] = useState();
 
   function fetchFiles() {
     const response = fetch("https://api.aaf-bet.ru/api/tasks/all");

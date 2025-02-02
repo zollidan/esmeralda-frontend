@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
-import { Nav } from "@/components/sidebar/nav";
-import { Header } from "@/components/header/header";
 import "./globals.css";
 import { Montserrat } from 'next/font/google'
-import {ClerkProvider, SignedIn, SignedOut, SignInButton, UserButton} from "@clerk/nextjs";
+import {ClerkProvider} from "@clerk/nextjs";
 
 
 const montserrat = Montserrat({ subsets: ['cyrillic-ext'] })
