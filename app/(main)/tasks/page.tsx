@@ -1,37 +1,44 @@
-"use client";
-import React, { useEffect, useState } from "react";
-import { TbFaceIdError } from "react-icons/tb";
+"use client"
+
+import { useCallback, useEffect, useState } from "react"
+
+import { TbFaceIdError } from "react-icons/tb"
 
 export default function ParsersPage() {
-  const [data, setData] = useState([]);
-  // const [error, setError] = useState();
+    const [tasks, setTasks] = useState()
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+    // const [error, setError] = useState()
 
-  function fetchFiles() {
-    const response = fetch("https://api.aaf-bet.ru/api/tasks/all");
+    const fetchTasks = useCallback(async () => {
+        try {
+            setIsLoading(true)
 
-    console.log(response);
+            const response = await fetch('/api/tasks')
+            const data = await response.json()
+            setTasks(data)
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setIsLoading(false)
+        }
+    }, [])
 
-    return response;
-  }
+    useEffect(() => {
+        fetchTasks()
+    }, [fetchTasks])
 
-  useEffect(() => {
-    fetchFiles()
-      .then((res) => res.json())
-      .then((data) => {
-        setData(data);
-      });
-  }, []);
-//TODO: сделать анимацию грустного лица
-  return (
-    <div className="flex justify-center overflow-x-auto">
-      {!data.length ? (
-        <div className="flex flex-col items-center justify-center">
-        <TbFaceIdError className="size-20"/>
-        <p className="text-neutral-800 mt-10">В данный момент задач нет.</p>
-        </div>
-      ) : (
-        <p>тут будет таблица</p>
-      )}
-    </div>
-  );
+    //TODO: сделать анимацию грустного лица
+    return (
+        isLoading
+            ? <div className="text-center">Загрузка...</div>
+            : <article className="flex justify-center">
+                {!tasks
+                    ? <div className="flex flex-col items-center gap-y-4">
+                        <TbFaceIdError className="size-20" />
+                        <h1>В данный момент задач нет</h1>
+                    </div>
+                    : <>table</>
+                }
+            </article>
+    )
 }
