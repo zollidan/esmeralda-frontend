@@ -1,5 +1,5 @@
 import { Nav } from "./nav"
-import {UserButton} from "@clerk/nextjs";
+import { UserButton } from "@clerk/nextjs"
 
 export const Header = () => {
     return (

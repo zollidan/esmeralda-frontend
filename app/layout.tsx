@@ -1,11 +1,9 @@
 import type { Metadata } from "next";
-import "./globals.css";
 import { Montserrat } from 'next/font/google'
-import {ClerkProvider} from "@clerk/nextjs";
-
+import { ClerkProvider } from "@clerk/nextjs"
+import "./globals.css"
 
 const montserrat = Montserrat({ subsets: ['cyrillic-ext'] })
-
 
 export const metadata: Metadata = {
   title: "aaf-bet.ru",
@@ -18,12 +16,12 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-      <ClerkProvider>
-    <html lang="en" className={montserrat.className}>
-      <body className="flex min-h-screen w-full flex-col">
-      {children}
-      </body>
-    </html>
+    <ClerkProvider>
+      <html lang="en">
+        <body className={`${montserrat.className} flex min-h-screen w-full flex-col suppressHydrationWarning`}>
+          {children}
+        </body>
+      </html>
     </ClerkProvider>
   );
 }
