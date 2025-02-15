@@ -1,84 +1,64 @@
-"use client";
-import React, { useState, useEffect } from "react";
+"use client"
 
-// Описание структуры данных файла
-interface File {
-  Key: string;
-  LastModified: string;
-  ETag: string;
-  Size: number;
-  StorageClass: string;
-  Owner: {
-    DisplayName: string;
-    ID: string;
-  };
-}
+import { useState, useEffect } from "react"
 
-export default function FilesPage() {
-  const [data, setData] = useState<File[]>([]); // Явно указываем тип массива
-  const [error, setError] = useState<string | null>(null);
+import { TbFaceIdError, TbLoader } from "react-icons/tb"
+import { FilesTable } from "@/components/files/files-table"
 
-  async function fetchFiles() {
-    try {
-      const response = await fetch("https://api.aaf-bet.ru/api/s3/files");
-      if (!response.ok) {
-        throw new Error(`Error: ${response.status}`);
-      }
-      const files: File[] = await response.json(); // Указываем, что это массив объектов типа File
-      setData(files);
-    } catch (err) {
-      setError((err as Error).message); // Приведение ошибки к типу Error
+const FilesPage = () => {
+    const [files, setFiles] = useState()
+    const [isLoading, setIsLoading] = useState<boolean>(false)
+
+    const fetchFiles = async () => {
+        try {
+            setIsLoading(true)
+
+            const response = await fetch("https://api.aaf-bet.ru/api/files/all")
+            const files = await response.json()
+            setFiles(files)
+        } catch (error) {
+            console.error(error)
+        } finally {
+            setIsLoading(false)
+        }
     }
-  }
 
-  useEffect(() => {
-    fetchFiles();
-  }, []);
+    const handleOnDelete = async (id: string) => {
+        try {
+            const response = await fetch(`https://api.aaf-bet.ru/api/files/delete/${id}`, {
+                method: 'DELETE',
+            })
+            const data = await response.json()
 
-  function handleDownload(key: string) {
-    const url = `https://api.aaf-bet.ru/api/s3/files/${key}`;
-    window.open(url, "_blank");
-  }
+            if (data.status === 'deleted') fetchFiles()
+        } catch (error) {
+            console.log(error)
+        }
+    }
 
-  return (
-    <div className="flex justify-center overflow-x-auto">
-      {error ? (
-        <p className="text-red-500">Failed to fetch files: {error}</p>
-      ) : (
-        <table className="table-auto border-collapse border border-gray-400">
-          <thead>
-            <tr>
-              <th className="border border-gray-300 px-4 py-2">Key</th>
-              <th className="border border-gray-300 px-4 py-2">
-                Last Modified
-              </th>
-              <th className="border border-gray-300 px-4 py-2">Size (KB)</th>
-              <th className="border border-gray-300 px-4 py-2">Download</th>
-            </tr>
-          </thead>
-          <tbody>
-            {data.map((file, index) => (
-              <tr key={index}>
-                <td className="border border-gray-300 px-4 py-2">{file.Key}</td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {new Date(file.LastModified).toLocaleString()}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  {(file.Size / 1024).toFixed(2)}
-                </td>
-                <td className="border border-gray-300 px-4 py-2">
-                  <button
-                    className="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600"
-                    onClick={() => handleDownload(file.Key)}
-                  >
-                    Download
-                  </button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      )}
-    </div>
-  );
+    useEffect(() => {
+        fetchFiles()
+    }, [])
+
+    if (isLoading) return (
+        <article className="flex justify-center items-center pl-14">
+            <TbLoader className="size-10 animate-spin" />
+        </article>
+    )
+
+    return (
+        <article className="flex justify-center pl-14">
+
+            {!files
+                ? <div className="flex flex-col items-center gap-y-4">
+                    <TbFaceIdError className="size-20" />
+                    <h1>Файлы не найдены</h1>
+                </div>
+                : <FilesTable files={files} handleOnDelete={handleOnDelete} />
+            }
+
+        </article>
+    )
 }
+
+export default FilesPage
