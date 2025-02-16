@@ -33,6 +33,9 @@ export const FilesTable = ({ files, handleOnDelete }: FilesTableProps) => {
                         ID
                     </TableHead>
                     <TableHead>
+                        Title
+                    </TableHead>
+                    <TableHead>
                         Date of Creation
                     </TableHead>
                     <TableHead>
@@ -55,6 +58,9 @@ export const FilesTable = ({ files, handleOnDelete }: FilesTableProps) => {
                     <TableRow key={file.id} >
                         <TableCell>
                             {file.id}
+                        </TableCell>
+                        <TableCell>
+                            {file.name}
                         </TableCell>
                         <TableCell>
                             {new Date(file.created_at).toLocaleDateString('ru-RU')}
