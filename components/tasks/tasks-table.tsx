@@ -1,5 +1,7 @@
 import { cn } from "@/lib/utils"
 
+import { Task } from "@/types"
+
 import {
     Table,
     TableRow,
@@ -8,12 +10,6 @@ import {
     TableHead,
     TableHeader,
 } from "@/components/ui/table"
-
-interface Task {
-    uuid: string
-    name: string
-    state: 'STARTED' | 'FAILURE' | 'SUCCESS'
-}
 
 type TasksTableProps = {
     tasks: Task[]
@@ -43,7 +39,7 @@ export const TasksTable = ({ tasks }: TasksTableProps) => {
                             {task.uuid}
                         </TableCell>
                         <TableCell className="capitalize">
-                            {task.name.replace('app.tasks.celery_app.', '').replace('_parser_task', '')}
+                            {task.name}
                         </TableCell>
                         <TableCell>
                             <p className={cn("px-2 py-1 w-fit rounded-md",
