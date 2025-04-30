@@ -3,13 +3,13 @@ import { Header } from "@/components/header/header"
 
 
 const MainLayout = ({ children }: { children: React.ReactNode }) => {
-  return (
-    <main className="flex min-h-screen w-full flex-col" >
-      <Nav />
-      <Header />
-      {children}
-    </main>
-  )
+    return (
+        <div className="flex min-h-screen w-full flex-col" >
+            <Nav />
+            <Header />
+            {children}
+        </div>
+    )
 }
 
 export default MainLayout
