@@ -1,4 +1,8 @@
+'use client'
+
 import Link from "next/link"
+
+import { File } from "@/types"
 
 import {
     Table,
@@ -11,38 +15,34 @@ import {
 
 import { IoCloudDownloadOutline, IoTrash } from "react-icons/io5"
 
-interface File {
-    id: string
-    name: string
-    file_url: string
-    created_at: string
-    updated_at: string
-}
-
 type FilesTableProps = {
     files: File[]
-    handleOnDelete: (id: string) => void
 }
 
-export const FilesTable = ({ files, handleOnDelete }: FilesTableProps) => {
+export const FilesTable = ({ files }: FilesTableProps) => {
+    const handleOnDelete = async (id: string) => {
+        try {
+            await fetch(`https://api.aaf-bet.ru/api/files/delete/${id}`, {
+                method: 'DELETE',
+                cache: 'no-cache'
+            })
+        } catch (error) {
+            console.error('DELETE FILE ERROR', error)
+        }
+    }
+
     return (
         <Table>
             <TableHeader>
                 <TableRow>
                     <TableHead>
-                        ID
+                        File ID
                     </TableHead>
                     <TableHead>
                         Title
                     </TableHead>
                     <TableHead>
-                        Date of Creation
-                    </TableHead>
-                    <TableHead>
-                        Date of Update
-                    </TableHead>
-                    <TableHead>
-                        Update Time
+                        Created at
                     </TableHead>
                     <TableHead>
                         <IoCloudDownloadOutline className="size-6 mx-2" />
@@ -63,20 +63,18 @@ export const FilesTable = ({ files, handleOnDelete }: FilesTableProps) => {
                             {file.name}
                         </TableCell>
                         <TableCell>
-                            {new Date(file.created_at).toLocaleDateString('ru-RU')}
-                        </TableCell>
-                        <TableCell>
-                            {new Date(file.updated_at).toLocaleDateString('ru-RU')}
-                        </TableCell>
-                        <TableCell>
-                            {new Date(file.updated_at).toLocaleTimeString('ru-RU')}
+                            {Intl.DateTimeFormat('ru-RU', {
+                                day: '2-digit',
+                                month: 'short',
+                                year: 'numeric',
+                            }).format(new Date(file.created_at))}
                         </TableCell>
                         <TableCell>
                             <Link
                                 href={file.file_url}
                                 download={file.file_url}
                                 aria-label="Download"
-                                className="flex w-fit p-2 rounded-md hover:bg-gray-300/60 transition-colors"
+                                className="flex w-fit p-2 rounded-full hover:bg-gray-300/60 transition-colors"
                             >
                                 <IoCloudDownloadOutline className="size-6" />
                             </Link>
@@ -84,9 +82,9 @@ export const FilesTable = ({ files, handleOnDelete }: FilesTableProps) => {
                         <TableCell>
                             <button
                                 type="button"
-                                aria-label="Download"
+                                aria-label="Delete"
                                 onClick={() => handleOnDelete(file.id)}
-                                className="p-2 rounded-md hover:text-rose-500 hover:bg-rose-100 transition-colors"
+                                className="p-2 hover:text-rose-500 rounded-full hover:bg-rose-100 transition-colors"
                             >
                                 <IoTrash className="size-6" />
                             </button>
