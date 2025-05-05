@@ -1,5 +1,7 @@
 'use client'
 
+import toast from "react-hot-toast"
+
 import { Task } from "@/types"
 import { cn } from "@/lib/utils"
 
@@ -28,7 +30,9 @@ export const TasksTable = ({ tasks }: TasksTableProps) => {
                     "Content-Type": "application/json",
                 },
             })
+            toast.success('Парсер остановлен!')
         } catch (error) {
+            toast.error('Что-то пошло не так!')
             console.error('ABORT TASK ERROR', error)
         }
     }
