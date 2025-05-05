@@ -1,6 +1,7 @@
 'use client'
 
 import Link from "next/link"
+import toast from "react-hot-toast"
 
 import { File } from "@/types"
 
@@ -22,11 +23,19 @@ type FilesTableProps = {
 export const FilesTable = ({ files }: FilesTableProps) => {
     const handleOnDelete = async (id: string) => {
         try {
-            await fetch(`https://api.aaf-bet.ru/api/files/delete/${id}`, {
+            const response = await fetch(`https://api.aaf-bet.ru/api/files/delete/${id}`, {
                 method: 'DELETE',
                 cache: 'no-cache'
             })
+            const data = await response.json()
+            if (!data.ok) {
+                toast.error('Не получилось удалить файл!')
+                return
+            }
+
+            toast.success('Файл удален!')
         } catch (error) {
+            toast.error('Что-то пошло не так!')
             console.error('DELETE FILE ERROR', error)
         }
     }
@@ -71,8 +80,9 @@ export const FilesTable = ({ files }: FilesTableProps) => {
                         </TableCell>
                         <TableCell>
                             <Link
-                                href={file.file_url}
-                                download={file.file_url}
+                                href={`https://api.aaf-bet.ru/` + file.file_url}
+                                onClick={() => toast.success('Файл загружен!')}
+                                download
                                 aria-label="Download"
                                 className="flex w-fit p-2 rounded-full hover:bg-gray-300/60 transition-colors"
                             >
