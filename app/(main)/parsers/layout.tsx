@@ -1,5 +1,4 @@
 import { ParsersNav } from "@/components/parsers/nav"
-import {Toaster} from "react-hot-toast";
 
 type Props = {
     children: React.ReactNode
@@ -11,7 +10,6 @@ const ParsersLayout = async ({ children }: Props) => {
             <div className="flex px-6">
                 <ParsersNav />
             </div>
-            <div><Toaster/></div>
             {children}
         </article>
     )
