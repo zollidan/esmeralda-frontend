@@ -2,7 +2,7 @@
 
 import { NavItem } from "./nav-item";
 
-import { GoHomeFill, GoTasklist } from "react-icons/go";
+import { GoHomeFill } from "react-icons/go";
 import { CiSettings, CiFileOn, CiParking1 } from "react-icons/ci";
 
 const routes = [

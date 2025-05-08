@@ -8,7 +8,7 @@ export async function POST(
 
   try {
     if (parser === "soccerway1") {
-      const response = await fetch(
+      await fetch(
         `https://api.aaf-bet.ru/api/run/soccerway1?date_start=${start_date}&date_end=${end_date}`,
         {
           method: "POST",
@@ -17,11 +17,11 @@ export async function POST(
           },
         }
       );
-      const data = await response.json();
+      // const data = await response.json();
       return NextResponse.json({ message: `${parser} начал работу!` });
     }
     if (parser === "soccerway2") {
-      const response = await fetch(
+      await fetch(
         `https://api.aaf-bet.ru/api/run/soccerway2?start_date=${start_date}&end_date=${end_date}`,
         {
           method: "POST",
@@ -30,7 +30,7 @@ export async function POST(
           },
         }
       );
-      const data = await response.json();
+      // const data = await response.json();
       return NextResponse.json({ message: `${parser} начал работу!` });
     }
   } catch (error) {
